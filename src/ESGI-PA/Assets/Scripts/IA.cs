@@ -1,3 +1,4 @@
+/*
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -127,7 +128,7 @@ public class IA : MonoBehaviour
             {
                 // If below, move in the direction of the checkpoint
                 transform.position = transform.position + direction * speed * Time.deltaTime;
-            }*/
+            }#1#
             
     }
     private void FixedUpdate()
@@ -153,3 +154,4 @@ public class IA : MonoBehaviour
         }
     }
 }
+*/

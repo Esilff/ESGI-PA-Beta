@@ -7,11 +7,14 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/Menuprincipal.unity
-    guid: 683d40ce6ba4eb642b2b7d400b7d9289
+    guid: 1c5ad27062a70e0439f5d5ded9fff10f
   - enabled: 1
-    path: Assets/Scenes/CircuitTest.unity
+    path: Assets/Scenes/Circuits/circleCircuit.unity
+    guid: fc4b3f0300ac05e4a95a651cfc740ba0
+  - enabled: 1
+    path: Assets/Scenes/Circuits/roundedCircuit.unity
+    guid: b4883b9a8a023624cbc72ffbc3c88c0a
+  - enabled: 1
+    path: Assets/Scenes/Circuits/testCircuit.unity
     guid: f3f28349fa36de540aea75ba1d837882
-  - enabled: 1
-    path: Assets/Scenes/menufin.unity
-    guid: 277f26ffd4cbcbe46bc12e1bc6e43124
   m_configObjects: {}

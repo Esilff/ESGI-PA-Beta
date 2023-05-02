@@ -15,6 +15,8 @@ public class RaceLoader : MonoBehaviour
     
     private int playerJoined;
 
+    public List<Vector3> spawningPosition = new();
+
     private Rect[] viewportDuo =
     {
         new Rect(0,0,1,0.5f),
@@ -54,6 +56,7 @@ public class RaceLoader : MonoBehaviour
             player.gameObject.GetComponentInChildren<Camera>().rect = viewportDuo[playerJoined];
         }
 
+        player.gameObject.transform.position = spawningPosition[playerJoined];
         playerJoined++;
     }
 }
