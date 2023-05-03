@@ -53,7 +53,8 @@ public class InputEditor : MonoBehaviour
         canEditKey = true;
         InputSystem.onAnyButtonPress.CallOnce(control =>
         {
-            if (!control.path.Contains("[Mouse]"))
+            Debug.Log("Path : " + control.path);
+            if (!control.path.Contains("/Mouse"))
             {
                 lastKey = (canEditKey ? control.path : lastKey);
                 Debug.Log(lastKey);

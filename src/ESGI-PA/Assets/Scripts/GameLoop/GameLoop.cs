@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public struct PlayerState
 {
@@ -56,7 +57,7 @@ public class GameLoop : MonoBehaviour
         }
         if (CheckEndgame())
         {
-            Debug.Log("GAME HAS ENDED");
+            SceneManager.LoadScene("Menuprincipal");
         }
     }
 
