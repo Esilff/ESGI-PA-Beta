@@ -286,7 +286,7 @@
                 {
                     "name": "up",
                     "id": "a10e078d-9d3b-4145-a7fd-cf35bebae443",
-                    "path": "/Mouse/leftButton",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -465,7 +465,7 @@
                     "path": "<Mouse>/delta/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": "keyboard",
+                    "groups": "Mouse",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -476,7 +476,7 @@
                     "path": "<Mouse>/delta/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": "keyboard",
+                    "groups": "Mouse",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -487,7 +487,7 @@
                     "path": "<Mouse>/delta/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": "keyboard",
+                    "groups": "Mouse",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -498,7 +498,7 @@
                     "path": "<Mouse>/delta/right",
                     "interactions": "",
                     "processors": "",
-                    "groups": "keyboard",
+                    "groups": "Mouse",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -579,6 +579,17 @@
             "devices": [
                 {
                     "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Mouse",
+            "bindingGroup": "Mouse",
+            "devices": [
+                {
+                    "devicePath": "<Mouse>",
                     "isOptional": false,
                     "isOR": false
                 }
