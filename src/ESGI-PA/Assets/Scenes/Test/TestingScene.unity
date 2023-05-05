@@ -162,9 +162,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 412584790}
-  - component: {fileID: 412584789}
   - component: {fileID: 412584792}
   - component: {fileID: 412584791}
+  - component: {fileID: 412584793}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -172,24 +172,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!143 &412584789
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 412584788}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.93, z: 0}
 --- !u!4 &412584790
 Transform:
   m_ObjectHideFlags: 0
@@ -249,8 +231,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b1c6e356fb8db340bf7d362dbbabb0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character: {fileID: 0}
   input: {fileID: 412584791}
-  controller: {fileID: 412584789}
+  controller: {fileID: 0}
+  stats:
+    weight: 5
+--- !u!143 &412584793
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412584788}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &482187606
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -550,6 +553,8 @@ MonoBehaviour:
     distance: 3
     sensitivity: 4
     speed: 0
+    maxPitch: 60
+    detectionRadius: 0
 --- !u!114 &1041215186
 MonoBehaviour:
   m_ObjectHideFlags: 0

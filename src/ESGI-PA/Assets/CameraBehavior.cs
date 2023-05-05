@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Barracuda;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +6,7 @@ using UnityEngine.InputSystem;
 struct CameraOptions
 {
     public float distance;
+    [Range(1,10)]
     public float sensitivity;
     public float speed;
     public float maxPitch;
@@ -42,16 +40,16 @@ public class CameraBehavior : MonoBehaviour
         currentPitch = Mathf.Clamp(currentPitch, -options.maxPitch, options.maxPitch);
         var cameraRot = camera.transform.rotation;
         camera.transform.rotation = Quaternion.Euler(currentPitch, cameraRot.eulerAngles.y, cameraRot.eulerAngles.z);
-        Vector3 nextPosition = target.position - (camera.forward * options.distance) + new Vector3(0,1,0) ;
-        camera.position = Vector3.SmoothDamp(camera.position, nextPosition, ref velocity, Time.deltaTime * options.speed); 
+        Vector3 nextPosition = target.position - (camera.forward * options.distance) + new Vector3(0,2,0) ;
+        camera.position = Vector3.Lerp(camera.position, nextPosition, Time.deltaTime * options.speed); 
     }
 
     private void FixedUpdate()
     {
-        /*float detectionRadius = options.distance;
+        float detectionRadius = options.distance;
 
         // Cast a sphere in front of the camera to detect obstacles
-        if (Physics.SphereCast(camera.position, detectionRadius, camera.forward, out RaycastHit hit, 10f, LayerMask.GetMask("Default")))
+        if (Physics.SphereCast(camera.position, options.detectionRadius, camera.forward, out RaycastHit hit, options.detectionRadius, LayerMask.GetMask("Default")))
         {
             // Adjust the camera distance based on the distance to the obstacle
             options.distance = hit.distance + 0.5f;
@@ -60,6 +58,6 @@ public class CameraBehavior : MonoBehaviour
         {
             // Reset the camera distance to the default value if there are no obstacles
             options.distance = defaultDistance;
-        }*/
+        }
     }
 }
