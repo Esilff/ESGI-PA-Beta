@@ -56,7 +56,7 @@ public class CarController : MonoBehaviour
     private float speed;
     void Start()
     {
-        CameraBehavior.inCar = true;
+        // CameraBehavior.inCar = true;
         currentHealth = maxHealth;
         Stats.turn = 0;
         //healthBar.maxValue = maxHealth;
