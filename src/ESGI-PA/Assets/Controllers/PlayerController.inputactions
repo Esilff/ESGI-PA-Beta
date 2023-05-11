@@ -269,6 +269,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Run",
+                    "type": "Button",
+                    "id": "3a064531-6267-4e5f-8bde-88178cf9c1cf",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -286,7 +295,7 @@
                 {
                     "name": "up",
                     "id": "a10e078d-9d3b-4145-a7fd-cf35bebae443",
-                    "path": "<Keyboard>/upArrow",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -297,7 +306,7 @@
                 {
                     "name": "down",
                     "id": "3a7336ae-5259-4804-8254-eecceaa4d810",
-                    "path": "<Keyboard>/downArrow",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -308,7 +317,7 @@
                 {
                     "name": "left",
                     "id": "c133a95d-b2e2-4a5c-8c9c-b73191defcad",
-                    "path": "<Keyboard>/leftArrow",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -319,7 +328,7 @@
                 {
                     "name": "right",
                     "id": "6d9573a7-c5e5-439c-99ed-c65cba977652",
-                    "path": "<Keyboard>/rightArrow",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -429,7 +438,7 @@
                 {
                     "name": "",
                     "id": "90c7caff-df51-4542-b2db-878806a33126",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -557,6 +566,17 @@
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "161d67c0-99be-453c-84eb-831c07e55b0a",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

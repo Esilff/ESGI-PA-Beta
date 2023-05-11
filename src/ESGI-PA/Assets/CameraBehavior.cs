@@ -41,7 +41,7 @@ public class CameraBehavior : MonoBehaviour
         var cameraRot = camera.transform.rotation;
         camera.transform.rotation = Quaternion.Euler(currentPitch, cameraRot.eulerAngles.y, cameraRot.eulerAngles.z);
         Vector3 nextPosition = target.position - (camera.forward * options.distance) + new Vector3(0,2,0) ;
-        camera.position = Vector3.Lerp(camera.position, nextPosition, Time.deltaTime * options.speed); 
+        camera.position = nextPosition;
     }
 
     private void FixedUpdate()
