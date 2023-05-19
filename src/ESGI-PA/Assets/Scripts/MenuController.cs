@@ -12,6 +12,10 @@ public class MenuController : MonoBehaviour
 	public RectTransform optionsMenu;
 	public RawImage[] playerImages;
 	public RawImage[] mapImages;
+	public Canvas audio = null;
+	public Canvas video = null;
+	public Canvas controls = null;
+	
 
 	[SerializeField] string map;
 	public bool canEditPlayers;
@@ -81,7 +85,30 @@ public class MenuController : MonoBehaviour
 	      }
       }
 
-    public void QuitGame()
+      public void OptionAudio()
+      {
+	      Debug.Log("Option Audio");
+	      audio.gameObject.SetActive(true);
+	      video.gameObject.SetActive(false);
+	      controls.gameObject.SetActive(false);
+
+      }
+      public void OptionVideo()
+	  {
+	      Debug.Log("Option Video");
+	      audio.gameObject.SetActive(false);
+	      video.gameObject.SetActive(true);
+	      controls.gameObject.SetActive(false);
+	  }
+      public void OptionControls()
+      	  {
+	      Debug.Log("Option Controls");
+	      audio.gameObject.SetActive(false);
+	      video.gameObject.SetActive(false);
+	      controls.gameObject.SetActive(true);
+          }
+
+      public void QuitGame()
     {
 		Debug.Log("Quit");
         Application.Quit();
