@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 
 using UnityEngine;
@@ -46,5 +47,11 @@ public class BonusBox : MonoBehaviour
         isTaken = false;
         mesh.enabled = true;
         collider.enabled = true;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.CompareTag("Player")) return;
+        other.GetComponent<PhysicCharacter>().vehicle = new GameObject(); //replace with random vehicle
     }
 }

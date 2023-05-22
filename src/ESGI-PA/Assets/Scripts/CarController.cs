@@ -1,3 +1,4 @@
+/*
 using System;
 using System.Collections;
 using UnityEngine;
@@ -51,7 +52,7 @@ public class CarController : MonoBehaviour
     /*private bool isBoosting;
     private float boostTimer;
     private float projectileTimer;
-	private string bonusValue;*/
+	private string bonusValue;#1#
 
     private float speed;
     void Start()
@@ -256,3 +257,4 @@ public void Jump(float jumpHeight, float jumpDuration)
         }
     }
 }
+*/

@@ -25,6 +25,9 @@ public class PhysicCharacter : MonoBehaviour
     private bool canDash = true;
     private bool dashing = false;
     private bool isRunning = false;
+    private bool useBonus = false;
+
+    public GameObject vehicle;
 
     [SerializeField] private float turnSmoothTime = 0.1f;
 
@@ -47,11 +50,9 @@ public class PhysicCharacter : MonoBehaviour
 
     private bool stillOnWall = false;
     
-    
     // Start is called before the first frame update
     void Start()
     {
-        //camera = gameObject.transform.GetChild(1);
         input.defaultActionMap = "Character";
         _runAnim = Animator.StringToHash("Running Threshold");
     }
@@ -63,22 +64,22 @@ public class PhysicCharacter : MonoBehaviour
         shouldJump = input.actions["Jump"].IsPressed();
         dashing = input.actions["Dash"].IsPressed();
         isRunning = input.actions["Run"].IsPressed();
+        useBonus = input.actions["Bonus"].IsPressed();
     }
 
     private void FixedUpdate()
     { 
+        if (useBonus) InvokeVehicle();
         CheckWalls();
         Gravity();
         Move();
         if (dashing) StartCoroutine(Dash());
         StartCoroutine(Jump());
         canJump = Physics.Raycast(new Ray(character.position, -character.up), 1.5f);
-        // Debug.Log(canJump);
     }
 
     private void Move()
     {
-        
         var forward = camera.forward;
         var right = camera.right;
         forward.y = 0;
@@ -116,10 +117,7 @@ public class PhysicCharacter : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             canWallJump = true;
         }
-        
     }
-    
-    
 
     private void Gravity()
     {
@@ -129,32 +127,29 @@ public class PhysicCharacter : MonoBehaviour
 
     private IEnumerator Dash()
     {
-        if (canDash)
+        if (!canDash) yield break;
+        var forward = camera.forward;
+        var right = camera.right;
+        forward.y = 0;
+        right.y = 0;
+        forward.Normalize();
+        right.Normalize();
+        var forceDirection = (forward * _axis.y) + (right * -_axis.x);
+        body.AddForce(forceDirection * (dashSpeed * (!canJump ? 0.8f : 1)), ForceMode.Impulse);
+        if (forceDirection.magnitude > 0.5f)
         {
-            var forward = camera.forward;
-            var right = camera.right;
-            forward.y = 0;
-            right.y = 0;
-            forward.Normalize();
-            right.Normalize();
-            var forceDirection = (forward * _axis.y) + (right * -_axis.x);
-            body.AddForce(forceDirection * (dashSpeed * (!canJump ? 0.8f : 1)), ForceMode.Impulse);
-            if (forceDirection.magnitude > 0.5f)
-            {
-                if (canJump) animator.SetFloat(_runAnim, 1);
-                else animator.SetFloat(_runAnim, 0);
-                var targetRotation = Quaternion.LookRotation(forceDirection, Vector3.up);
-                character.rotation = Quaternion.Lerp(character.rotation, targetRotation, turnSmoothTime); 
-            }
-            else
-            {
-                animator.SetFloat(_runAnim, 0);
-            }
-
-            canDash = false;
-            yield return new WaitForSeconds(5f);
-            canDash = true;
+            if (canJump) animator.SetFloat(_runAnim, 1);
+            else animator.SetFloat(_runAnim, 0);
+            var targetRotation = Quaternion.LookRotation(forceDirection, Vector3.up);
+            character.rotation = Quaternion.Lerp(character.rotation, targetRotation, turnSmoothTime); 
         }
+        else
+        {
+            animator.SetFloat(_runAnim, 0);
+        }
+        canDash = false;
+        yield return new WaitForSeconds(5f);
+        canDash = true;
     }
 
     private void CheckWalls()
@@ -164,20 +159,15 @@ public class PhysicCharacter : MonoBehaviour
         leftWallHit = Physics.Raycast(new Ray(character.position, -camera.right), out leftWallInfo, 0.7f,
             LayerMask.GetMask("Wall"));
         canWallJump = rightWallHit || leftWallHit;
-        /*if (!(rightWallHit || leftWallHit) && stillOnWall)
-        {
-            canWallJump
-        }*/
+
         if (rightWallHit) character.right = Vector3.Lerp(character.right, rightWallInfo.normal, 0.1f);
         if (leftWallHit) character.right = Vector3.Lerp(character.right, leftWallInfo.normal, 0.1f);;
-        Debug.Log($"Right wall : {rightWallHit}");
-        Debug.Log($"Left wall : {leftWallHit}");
     }
 
-    
-
-    /*private void OnCollisionExit(Collision other)
+    private void InvokeVehicle()
     {
-        canJump = false;
-    }*/
+        if (!vehicle) return;
+        GameObject newVehicle = Instantiate(vehicle, character.forward, character.rotation);
+        character.parent = newVehicle.transform;
+    }
 }

@@ -57,7 +57,7 @@
                 {
                     "name": "up",
                     "id": "5f23d704-2abd-40e8-a181-98b9efe4bac4",
-                    "path": "/Mouse/leftButton",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -68,7 +68,7 @@
                 {
                     "name": "down",
                     "id": "6ade7f8c-0ac0-4206-9578-59bdb40d9f4e",
-                    "path": "/Mouse/leftButton",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -156,7 +156,7 @@
                 {
                     "name": "",
                     "id": "327ccecb-e03a-488b-842c-74463a81eec7",
-                    "path": "/Keyboard/e",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
