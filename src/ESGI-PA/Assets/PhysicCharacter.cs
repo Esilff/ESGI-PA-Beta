@@ -13,8 +13,10 @@ public class PhysicCharacter : MonoBehaviour
 
     [SerializeField] private PlayerInput input;
     [SerializeField] private Transform camera;
+    [SerializeField] private CameraBehavior cameraScript;
     [SerializeField] private Animator animator;
-
+    [SerializeField] private GameObject model;
+    
     private Vector2 _axis;
     private bool shouldJump;
     private bool canJump = true;
@@ -26,10 +28,14 @@ public class PhysicCharacter : MonoBehaviour
     private bool dashing = false;
     private bool isRunning = false;
     private bool useBonus = false;
+    private bool _shouldExit = false;
+    
 
     public GameObject vehicle;
+    private GameObject activeVehicle;
+    private bool onVehicle = false;
 
-    [SerializeField] private float turnSmoothTime = 0.1f;
+        [SerializeField] private float turnSmoothTime = 0.1f;
 
     [SerializeField] private int speed = 1;
 
@@ -60,6 +66,12 @@ public class PhysicCharacter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (onVehicle)
+        {
+            _shouldExit = input.actions["Escape"].IsPressed();
+            return;
+        }
         _axis = input.actions["Move"].ReadValue<Vector2>() * (Time.deltaTime * 5000f);
         shouldJump = input.actions["Jump"].IsPressed();
         dashing = input.actions["Dash"].IsPressed();
@@ -68,7 +80,25 @@ public class PhysicCharacter : MonoBehaviour
     }
 
     private void FixedUpdate()
-    { 
+    {
+        if (onVehicle)
+        {
+            if (_shouldExit)
+            {
+                DestroyVehicle();
+                return;
+            }
+            character.position = activeVehicle.transform.position;
+            character.rotation = activeVehicle.transform.rotation;
+        }
+        else
+        {
+            DefaultState();
+        }
+    }
+
+    private void DefaultState()
+    {
         if (useBonus) InvokeVehicle();
         CheckWalls();
         Gravity();
@@ -159,7 +189,6 @@ public class PhysicCharacter : MonoBehaviour
         leftWallHit = Physics.Raycast(new Ray(character.position, -camera.right), out leftWallInfo, 0.7f,
             LayerMask.GetMask("Wall"));
         canWallJump = rightWallHit || leftWallHit;
-
         if (rightWallHit) character.right = Vector3.Lerp(character.right, rightWallInfo.normal, 0.1f);
         if (leftWallHit) character.right = Vector3.Lerp(character.right, leftWallInfo.normal, 0.1f);;
     }
@@ -167,7 +196,27 @@ public class PhysicCharacter : MonoBehaviour
     private void InvokeVehicle()
     {
         if (!vehicle) return;
-        GameObject newVehicle = Instantiate(vehicle, character.forward, character.rotation);
-        character.parent = newVehicle.transform;
+        activeVehicle = vehicle;
+        GameObject newVehicle = Instantiate(vehicle, character.position, character.rotation);
+        character.parent.parent = newVehicle.transform;
+        vehicle = null;
+        model.SetActive(false);
+        cameraScript.Locked = true;
+        cameraScript.Target = newVehicle.transform;
+        onVehicle = true;
+    }
+
+    private void DestroyVehicle()
+    {
+        activeVehicle = null;
+        character.position = character.parent.parent.transform.position;
+        GameObject toDestroy = character.parent.parent.gameObject;
+        character.parent.parent = null;
+        
+        Destroy(toDestroy);
+        model.SetActive(true);
+        cameraScript.Locked = false;
+        cameraScript.Target = character;
+        onVehicle = false;
     }
 }

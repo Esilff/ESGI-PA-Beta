@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Bonus
+public class Bonus : MonoBehaviour
 {
     [SerializeField] private List<GameObject> vehicles = new();
 

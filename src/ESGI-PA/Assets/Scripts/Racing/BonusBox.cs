@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
-
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BonusBox : MonoBehaviour
 {
     private bool isTaken;
+    [SerializeField] private List<GameObject> vehicles = new();
+    
 
     public bool IsTaken
     {
@@ -52,6 +55,9 @@ public class BonusBox : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-        other.GetComponent<PhysicCharacter>().vehicle = new GameObject(); //replace with random vehicle
+        isTaken = true;
+        GameObject vehicle = other.GetComponent<PhysicCharacter>().vehicle = new GameObject();
+        other.GetComponent<PhysicCharacter>().vehicle =
+            vehicles[Random.Range(0, vehicles.Count)]; //replace with random vehicle
     }
 }

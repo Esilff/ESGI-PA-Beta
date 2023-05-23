@@ -34,10 +34,10 @@ public class PhysicsVehicle : MonoBehaviour
     private Vector2 _defaultAxis;
     void Update()
     {
+        if (input.actions["Respawn"].IsPressed() && !_isGrounded && body.velocity.magnitude < 1f) Respawn();
         _defaultAxis = input.actions["Movement"].ReadValue<Vector2>();
         _axis = input.actions["Movement"].ReadValue<Vector2>() * (Time.deltaTime * 50000f);
         _isDrifting = input.actions["Drift"].IsPressed();
-        Debug.Log("Default axis : " + _defaultAxis);
     }
 
     private void FixedUpdate()
@@ -114,5 +114,11 @@ public class PhysicsVehicle : MonoBehaviour
         {
             body.AddForce(0,-weight * Time.deltaTime * 1000f,0);
         }
+    }
+
+    private void Respawn()
+    {
+        vehicle.position = new Vector3(37, -5, 0);
+        vehicle.rotation = Quaternion.identity;
     }
 }

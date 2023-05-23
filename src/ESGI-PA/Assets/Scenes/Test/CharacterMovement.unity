@@ -1472,8 +1472,8 @@ MonoBehaviour:
   input: {fileID: 1760345489}
   options:
     distance: 4
-    sensitivity: 5
-    speed: 0
+    sensitivity: 1
+    speed: 1
     maxPitch: 40
     detectionRadius: 0
   locked: 0
