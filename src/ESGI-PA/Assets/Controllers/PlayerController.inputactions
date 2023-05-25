@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Fire",
+                    "name": "Booster",
                     "type": "Button",
                     "id": "0d1d3dd0-14ab-47ee-aca1-d303118da859",
                     "expectedControlType": "Button",
@@ -213,7 +213,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
-                    "action": "Fire",
+                    "action": "Booster",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -224,7 +224,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "gamepad",
-                    "action": "Fire",
+                    "action": "Booster",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
