@@ -15,6 +15,9 @@ public class MenuController : MonoBehaviour
 	public Canvas audio = null;
 	public Canvas video = null;
 	public Canvas controls = null;
+	public UnityEngine.UI.Toggle toggle;
+	public Dropdown dropdown;
+	private Resolution[] resolutions;
 	
 
 	[SerializeField] string map;
@@ -22,12 +25,31 @@ public class MenuController : MonoBehaviour
 	
 	private void Start()
 	{
+		resolutions = Screen.resolutions;
+
+		dropdown.ClearOptions();
+
+		// Ajoutez les options de résolution au dropdown
+		foreach (Resolution resolution in resolutions)
+		{
+			dropdown.options.Add(new Dropdown.OptionData(resolution.width + "x" + resolution.height));
+		}
+
+		dropdown.value = GetCurrentResolutionIndex();
+		dropdown.RefreshShownValue();
+
+		dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
+				
+		toggle.isOn = Screen.fullScreen;
+		toggle.onValueChanged.AddListener(OnToggleValueChanged);
+		
 		canEditPlayers = false;
 		foreach (var image in playerImages)
 		{
 			image.color = Color.gray;
 		}
 		if (Time.timeScale == 0) Time.timeScale = 1;
+
 	}
 
 	public void ToMainMenu()
@@ -117,4 +139,29 @@ public class MenuController : MonoBehaviour
 		        UnityEditor.EditorApplication.isPlaying = false;
 	    #endif
     }
+      private void OnToggleValueChanged(bool isFullscreen)
+      {
+	      Screen.fullScreen = isFullscreen;
+      }
+      private int GetCurrentResolutionIndex()
+      {
+	      Resolution currentResolution = Screen.currentResolution;
+
+	      for (int i = 0; i < resolutions.Length; i++)
+	      {
+		      if (resolutions[i].width == currentResolution.width &&
+		          resolutions[i].height == currentResolution.height)
+		      {
+			      return i;
+		      }
+	      }
+
+	      return 0;
+      }
+
+      private void OnDropdownValueChanged(int index)
+      {
+	      Resolution resolution = resolutions[index];
+	      Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+      }
 }
