@@ -198,6 +198,7 @@ public class PhysicCharacter : MonoBehaviour
         if (!vehicle) return;
         activeVehicle = vehicle;
         GameObject newVehicle = Instantiate(vehicle, character.position, character.rotation);
+        newVehicle.GetComponent<PhysicsVehicle>().Character = this;
         character.parent.parent = newVehicle.transform;
         vehicle = null;
         model.SetActive(false);
@@ -206,17 +207,18 @@ public class PhysicCharacter : MonoBehaviour
         onVehicle = true;
     }
 
-    private void DestroyVehicle()
+    public void DestroyVehicle()
     {
         activeVehicle = null;
         character.position = character.parent.parent.transform.position;
         GameObject toDestroy = character.parent.parent.gameObject;
         character.parent.parent = null;
-        
+
         Destroy(toDestroy);
         model.SetActive(true);
         cameraScript.Locked = false;
         cameraScript.Target = character;
+        cameraScript.gameObject.transform.rotation = Quaternion.identity;
         onVehicle = false;
     }
 }

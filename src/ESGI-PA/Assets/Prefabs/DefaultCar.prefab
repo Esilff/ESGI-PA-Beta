@@ -52,10 +52,13 @@ MonoBehaviour:
   vehicle: {fileID: 1472848424178709160}
   body: {fileID: 6251980933766321693}
   input: {fileID: 7286510229522652965}
-  speed: 3
-  weight: 5
-  rotationSpeed: 1
-  loopCap: 30
+  stats:
+    speed: 5
+    weight: 5
+    rotationSpeed: 3
+    loopCap: 1
+    maxHealth: 100
+  boostAmount: 24
 --- !u!114 &7286510229522652965
 MonoBehaviour:
   m_ObjectHideFlags: 0

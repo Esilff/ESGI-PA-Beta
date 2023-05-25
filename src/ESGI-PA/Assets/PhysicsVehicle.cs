@@ -1,50 +1,81 @@
 
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
+[Serializable]
+struct VehicleStats
+{
+    [Range(1,15)]
+    public int speed;
+    [Range(1,25)]
+    public int weight;
+
+    [Range(1, 10)] public int rotationSpeed;
+    public float loopCap;
+
+    [Range(60, 100)] public int maxHealth;
+}
+
 public class PhysicsVehicle : MonoBehaviour
 {
     // Start is called before the first frame update
+    [InspectorLabel("Components")]
     [SerializeField] private Transform vehicle;
     [SerializeField] private Rigidbody body;
     [SerializeField] private PlayerInput input;
-
-    [Range(1, 15)]
-    [SerializeField] private float speed = 1;
-
-    [Range(1, 25)] 
-    [SerializeField] private int weight = 1;
-
-    [Range(1,10)][SerializeField] private int rotationSpeed = 1;
-    [SerializeField] private float loopCap = 1f;
     
+
+    [SerializeField] private VehicleStats stats;
+    
+    private Vector2 _defaultAxis;
     private Vector2 _axis;
     private bool _isDrifting;
-
     private bool _isGrounded;
     private RaycastHit _groundInfo;
+    private bool _isBoosting;
+    
+    private int _currentHealth;
+    private const int MAX_BOOST = 100;
+    [SerializeField] private float boostAmount = 0;
 
-    private float _lastDriftDirection;
-    private bool _driftHold;
+    private const float TIME_TO_BOOST = 3;
+    private float boostTimer = 0;
 
-    private Vector2 _defaultAxis;
+    private PhysicCharacter character;
+
+    public PhysicCharacter Character
+    {
+        get => character;
+        set => character = value;
+    }
+    private void Awake()
+    {
+        _currentHealth = stats.maxHealth;
+        boostAmount = 20;
+    }
+
     void Update()
     {
+        CheckHealth();
+     
         if (input.actions["Respawn"].IsPressed() && !_isGrounded && body.velocity.magnitude < 1f) Respawn();
         _defaultAxis = input.actions["Movement"].ReadValue<Vector2>();
         _axis = input.actions["Movement"].ReadValue<Vector2>() * (Time.deltaTime * 50000f);
         _isDrifting = input.actions["Drift"].IsPressed();
+        _isBoosting = input.actions["Booster"].IsPressed();
     }
 
     private void FixedUpdate()
     {
+        
         CheckConstraints();
-        //vehicle.up = groundInfo.normal;
         Gravity();
+        ManageBoost();
         if (_isDrifting)
         {
             Drift();
@@ -58,47 +89,33 @@ public class PhysicsVehicle : MonoBehaviour
     private void Move()
     {
         if (!_isGrounded) return;
-        Vector3 force = (vehicle.forward * (_defaultAxis.y * 45 * speed));
-        // Debug.Log("Force : " + force);
-        //force += groundInfo.normal;
-        _lastDriftDirection = 0;
+        Vector3 force = (vehicle.forward * (_defaultAxis.y * 45 * stats.speed * (_isBoosting? 1.5f : 1f)));
         if (_axis != Vector2.zero)
         {
-            vehicle.rotation *= Quaternion.Euler(new Vector3(0,rotationSpeed * 0.1f,0) * (_defaultAxis.x * 45));
+            vehicle.rotation *= Quaternion.Euler(new Vector3(0,stats.rotationSpeed * 0.025f,0) * (_defaultAxis.x * 45));
         }
-        // transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.FromToRotation(transform.up, _ground.normal) * transform.rotation, carSmooth);
         var rotation = vehicle.rotation;
         transform.rotation = Quaternion.Lerp(rotation,
             Quaternion.FromToRotation(vehicle.up, _groundInfo.normal) * rotation, 0.5f);
-        // vehicle.up = groundInfo.normal;
-       
-            // vehicle.rotation *= Quaternion.Euler(groundInfo.normal);
-        
         body.AddForce(force, ForceMode.Acceleration);
     }
 
     private void Drift()
     {
-        if (!_isGrounded || _axis.x == 0)
-        {
-            _driftHold = false;
-            return;
-        }
-
-        vehicle.rotation *= Quaternion.Euler(new Vector3(0,rotationSpeed * 0.1f,0) * (_defaultAxis.x * 25));
+        if (!_isGrounded) return;
         var rotation = vehicle.rotation;
-        transform.rotation = Quaternion.Lerp(rotation,
+        rotation *= Quaternion.Euler(new Vector3(0,stats.rotationSpeed * 0.05f,0) * (_defaultAxis.x * 25));
+        rotation = Quaternion.Lerp(rotation,
             Quaternion.FromToRotation(vehicle.up, _groundInfo.normal) * rotation, 0.5f);
-    
-
-        Vector3 force = (vehicle.forward * (speed * 25)) + (vehicle.right * ((Math.Abs(_defaultAxis.x - (-1)) < 0.4f ? _defaultAxis.y : -_defaultAxis.y) * speed * 30));
+        vehicle.rotation = rotation;
+        var force = (vehicle.forward * (stats.speed * 25 * (_isBoosting? 1.5f : 1f))) + (vehicle.right * ((Math.Abs(_defaultAxis.x - (-1)) < 0.4f ? _defaultAxis.y : -_defaultAxis.y) * stats.speed * 30));
         body.AddForce(force);
     }
 
     private void CheckConstraints()
     {
         _isGrounded = Physics.Raycast(new Ray(vehicle.position, -vehicle.up), out _groundInfo, 1.5f);
-        if (Mathf.Abs(body.velocity.magnitude) > loopCap && _isGrounded)
+        if (Mathf.Abs(body.velocity.magnitude) > stats.loopCap && _isGrounded)
         {
             body.useGravity = false;
         }
@@ -112,7 +129,7 @@ public class PhysicsVehicle : MonoBehaviour
     {
         if (!_isGrounded)
         {
-            body.AddForce(0,-weight * Time.deltaTime * 1000f,0);
+            body.AddForce(0,-stats.weight * Time.deltaTime * 1000f,0);
         }
     }
 
@@ -120,5 +137,37 @@ public class PhysicsVehicle : MonoBehaviour
     {
         vehicle.position = new Vector3(37, -5, 0);
         vehicle.rotation = Quaternion.identity;
+    }
+
+    private void CheckHealth()
+    {
+        if (_currentHealth <= 0)
+        {
+            character.DestroyVehicle();
+            
+        }
+        if (_currentHealth > stats.maxHealth) _currentHealth = stats.maxHealth;
+    }
+
+    private void ManageBoost()
+    {
+        if (_isBoosting && boostAmount > 0)
+        {
+            boostAmount -= 0.1f;
+        }
+
+        if (_isDrifting && !_isBoosting && _axis.x != 0)
+        {
+            boostTimer += Time.deltaTime * 4;
+        }
+        else
+        {
+            boostTimer = 0;
+        }
+
+        if (boostTimer > TIME_TO_BOOST && boostAmount <= MAX_BOOST)
+        {
+            boostAmount += 0.1f;
+        }
     }
 }
