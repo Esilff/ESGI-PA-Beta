@@ -1,10 +1,19 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Bonus
+public class Bonus : MonoBehaviour
 {
-    private static Bonus instance = null;
+    [SerializeField] private List<GameObject> vehicles = new();
+
+    private Action<PhysicCharacter>[] bonusList = new Action<PhysicCharacter>[]
+    {
+        
+    };
+    
+    
+    /*private static Bonus instance = null;
     
     private Bonus(){}
 
@@ -79,5 +88,5 @@ public class Bonus
     public Action<CarStats> getBonus()
     {
         return bonusList[UnityEngine.Random.Range(0, bonusList.Length)];
-    }
+    }*/
 }
