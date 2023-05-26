@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.MLAgents;
+using Unity.MLAgents.Actuators;
 
 public class PhysicCharacter : MonoBehaviour
 {
@@ -51,6 +53,8 @@ public class PhysicCharacter : MonoBehaviour
     private bool rightWallHit;
 
     private bool stillOnWall = false;
+
+    private bool isIAControlled = false;
     
     // Start is called before the first frame update
     void Start()
@@ -62,17 +66,8 @@ public class PhysicCharacter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (onVehicle)
-        {
-            _shouldExit = input.actions["Escape"].IsPressed();
-            return;
-        }
-        _axis = input.actions["Move"].ReadValue<Vector2>() * (Time.deltaTime * 5000f);
-        shouldJump = input.actions["Jump"].IsPressed();
-        dashing = input.actions["Dash"].IsPressed();
-        isRunning = input.actions["Run"].IsPressed();
-        useBonus = input.actions["Bonus"].IsPressed();
+        ReadInput();
+        
     }
 
     private void FixedUpdate()
@@ -93,6 +88,20 @@ public class PhysicCharacter : MonoBehaviour
         }
     }
 
+    private void ReadInput()
+    {
+        if (onVehicle)
+        {
+            _shouldExit = input.actions["Escape"].IsPressed();
+            return;
+        }
+        _axis = input.actions["Move"].ReadValue<Vector2>() * (Time.deltaTime * 5000f);
+        shouldJump = input.actions["Jump"].IsPressed();
+        dashing = input.actions["Dash"].IsPressed();
+        isRunning = input.actions["Run"].IsPressed();
+        useBonus = input.actions["Bonus"].IsPressed();
+    }
+    
     private void DefaultState()
     {
         if (useBonus) InvokeVehicle();
@@ -106,8 +115,8 @@ public class PhysicCharacter : MonoBehaviour
 
     private void Move()
     {
-        var forward = camera.forward;
-        var right = camera.right;
+        var forward = isIAControlled ? Vector3.forward : camera.forward;
+        var right = isIAControlled ? Vector3.right : camera.right;
         forward.y = 0;
         right.y = 0;
         forward.Normalize();

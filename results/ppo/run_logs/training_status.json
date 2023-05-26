@@ -1,0 +1,51 @@
+{
+    "CharacterAI": {
+        "checkpoints": [
+            {
+                "steps": 26304,
+                "file_path": "results\\ppo\\CharacterAI\\CharacterAI-26304.onnx",
+                "reward": null,
+                "creation_time": 1685048642.1116338,
+                "auxillary_file_paths": [
+                    "results\\ppo\\CharacterAI\\CharacterAI-26304.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 26304,
+            "file_path": "results\\ppo\\CharacterAI.onnx",
+            "reward": null,
+            "creation_time": 1685048642.1116338,
+            "auxillary_file_paths": [
+                "results\\ppo\\CharacterAI\\CharacterAI-26304.pt"
+            ]
+        }
+    },
+    "CharacterRacer_Easy": {
+        "checkpoints": [
+            {
+                "steps": 26304,
+                "file_path": "results\\ppo\\CharacterRacer_Easy\\CharacterRacer_Easy-26304.onnx",
+                "reward": null,
+                "creation_time": 1685048642.167145,
+                "auxillary_file_paths": [
+                    "results\\ppo\\CharacterRacer_Easy\\CharacterRacer_Easy-26304.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 26304,
+            "file_path": "results\\ppo\\CharacterRacer_Easy.onnx",
+            "reward": null,
+            "creation_time": 1685048642.167145,
+            "auxillary_file_paths": [
+                "results\\ppo\\CharacterRacer_Easy\\CharacterRacer_Easy-26304.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.7.0+cu110"
+    }
+}

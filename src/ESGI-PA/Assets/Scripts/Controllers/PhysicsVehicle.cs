@@ -61,12 +61,7 @@ public class PhysicsVehicle : MonoBehaviour
     void Update()
     {
         CheckHealth();
-     
-        if (input.actions["Respawn"].IsPressed() && !_isGrounded && body.velocity.magnitude < 1f) Respawn();
-        _defaultAxis = input.actions["Movement"].ReadValue<Vector2>();
-        _axis = input.actions["Movement"].ReadValue<Vector2>() * (Time.deltaTime * 50000f);
-        _isDrifting = input.actions["Drift"].IsPressed();
-        _isBoosting = input.actions["Booster"].IsPressed();
+        ReadInput();
     }
 
     private void FixedUpdate()
@@ -83,6 +78,15 @@ public class PhysicsVehicle : MonoBehaviour
         {
             Move();
         }
+    }
+
+    private void ReadInput()
+    {
+        if (input.actions["Respawn"].IsPressed() && !_isGrounded && body.velocity.magnitude < 1f) Respawn();
+        _defaultAxis = input.actions["Movement"].ReadValue<Vector2>();
+        _axis = input.actions["Movement"].ReadValue<Vector2>() * (Time.deltaTime * 50000f);
+        _isDrifting = input.actions["Drift"].IsPressed();
+        _isBoosting = input.actions["Booster"].IsPressed();
     }
 
     private void Move()
