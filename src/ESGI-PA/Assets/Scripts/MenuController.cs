@@ -10,6 +10,7 @@ public class MenuController : MonoBehaviour
 	public RectTransform mapSelectMenu;
 	public RectTransform gameConfigMenu;
 	public RectTransform optionsMenu;
+	public RectTransform LoginMenu;
 	public RawImage[] playerImages;
 	public RawImage[] mapImages;
 	public Canvas audio = null;
@@ -60,7 +61,14 @@ public class MenuController : MonoBehaviour
 		canEditPlayers = false;
 		mapSelectMenu.gameObject.SetActive(false);
 		gameConfigMenu.gameObject.SetActive(false);
+		LoginMenu.gameObject.SetActive(false);
+		optionsMenu.gameObject.SetActive(false);
 		mainMenu.gameObject.SetActive(true);
+	}
+	public void ToLoginMenu()
+	{
+		mainMenu.gameObject.SetActive(false);
+		LoginMenu.gameObject.SetActive(true);
 	}
 
 	public void ToOptions()
