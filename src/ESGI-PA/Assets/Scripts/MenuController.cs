@@ -18,6 +18,8 @@ public class MenuController : MonoBehaviour
 	public UnityEngine.UI.Toggle toggle;
 	public Dropdown dropdown;
 	private Resolution[] resolutions;
+	public UnityEngine.UI.Slider volumeSlider; // Référence au composant Slider qui contrôle le volume
+	public AudioSource audioSource; // Référence à votre source audio
 	
 
 	[SerializeField] string map;
@@ -25,6 +27,7 @@ public class MenuController : MonoBehaviour
 	
 	private void Start()
 	{
+		volumeSlider.onValueChanged.AddListener(ChangeVolume);
 		resolutions = Screen.resolutions;
 
 		dropdown.ClearOptions();
@@ -163,5 +166,9 @@ public class MenuController : MonoBehaviour
       {
 	      Resolution resolution = resolutions[index];
 	      Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+      }
+      private void ChangeVolume(float volume)
+      {
+	      audioSource.volume = volume;
       }
 }
