@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Security.Cryptography;
+using Grpc.Core.Logging;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -22,7 +24,7 @@ public class CameraBehavior : MonoBehaviour
 {
     [SerializeField] private Transform camera;
     [SerializeField] private Transform target;
-    [SerializeField] private PlayerInput input;
+    [SerializeField] private PhysicCharacter character;
     
     [SerializeField] private CameraOptions options;
     [SerializeField] private bool locked = false;
@@ -75,14 +77,16 @@ public class CameraBehavior : MonoBehaviour
 
     private void FreeCamera()
     {
-        axis = input.actions["Look"].ReadValue<Vector2>() * (options.sensitivity * 100 * Time.deltaTime);
+        axis = character.LookAxis * (options.sensitivity * 100 * Time.deltaTime);
         var tPos = target.position;
         camera.RotateAround(tPos, Vector3.up, axis.x);
         currentPitch += -axis.y;
         currentPitch = Mathf.Clamp(currentPitch, -options.maxPitch, options.maxPitch);
         var cameraRot = camera.transform.rotation;
-        camera.rotation = Quaternion.Lerp(camera.rotation, Quaternion.Euler(currentPitch, cameraRot.eulerAngles.y, cameraRot.eulerAngles.z),0.9f);
+        camera.rotation = Quaternion.Lerp(camera.rotation, Quaternion.Euler(currentPitch, cameraRot.eulerAngles.y, cameraRot.eulerAngles.z),0.1f);
         Vector3 nextPosition = tPos - (camera.forward * options.distance) + new Vector3(0,2,0) ;
         camera.position = nextPosition;
     }
+
+
 }
