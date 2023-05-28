@@ -39,7 +39,7 @@ public class RegisterUser : MonoBehaviour
         string jsonData = JsonUtility.ToJson(newUser);
 
         // Envoyer la requête POST à l'API
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(apiUrl, jsonData))
+        using (UnityWebRequest www = UnityWebRequest.Post(apiUrl, jsonData))
         {
             www.SetRequestHeader("Content-Type", "application/json");
             www.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(jsonData));

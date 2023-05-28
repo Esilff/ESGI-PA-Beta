@@ -24,6 +24,7 @@ public class LoginMenu : MonoBehaviour
     void Start()
     {
         submitButton.onClick.AddListener(GetUser);
+        isLogin = false;
     }
 
     public void GetUser()
@@ -37,8 +38,11 @@ public class LoginMenu : MonoBehaviour
     }
     public void ToMain()
     {
-        loginCanvas.gameObject.SetActive(false);
-        mainCanvas.gameObject.SetActive(true); 
+        if (isLogin)
+        {
+            loginCanvas.gameObject.SetActive(false);
+            mainCanvas.gameObject.SetActive(true); 
+        }
     }
     IEnumerator GetUserCoroutine()
     {
@@ -70,6 +74,8 @@ public class LoginMenu : MonoBehaviour
                 if (isLogin)
                 {
                     messageText.text = "Connexion réussie";
+                    isLogin = true;
+                    ToMain();
                 }
                 else
                 {
