@@ -809,6 +809,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6846387436659892121, guid: f4e108148364e6f4facf53e6d6425b45, type: 3}
+      propertyPath: playerPrefab
+      value: 
+      objectReference: {fileID: 6645698762212720202, guid: 1928bddf13aebba42a3820396c6f2ae7, type: 3}
+    - target: {fileID: 6846387436659892121, guid: f4e108148364e6f4facf53e6d6425b45, type: 3}
       propertyPath: spawningPosition.Array.size
       value: 0
       objectReference: {fileID: 0}
