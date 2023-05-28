@@ -18,6 +18,7 @@ public class RaceMapper : EditorWindow
     private GameObject _checkpointObject;
     private RaceLoader _loader;
     private GameObject _boxObject;
+    private GameLoop _gameLoop;
 
     private string _objectLabel = "None";
     private string _heightOffset = "1";
@@ -33,6 +34,7 @@ public class RaceMapper : EditorWindow
     private void OnEnable()
     {
         _loader = FindObjectOfType(typeof(RaceLoader)).GetComponent<RaceLoader>();
+        _gameLoop = FindObjectOfType(typeof(GameLoop)).GetComponent<GameLoop>();
         _checkpointObject = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/checkpoint.prefab");
         _boxObject = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/bonus.prefab");
         SceneView.duringSceneGui += SetObject;
@@ -98,7 +100,7 @@ public class RaceMapper : EditorWindow
                     case RaceObject.Checkpoint:
                         GameObject checkpoint = Instantiate(_checkpointObject, hitPos, Quaternion.identity);
                         checkpoint.transform.localScale *= validScale ? scaleValue : 1;
-                        
+                        _gameLoop.Checkpoints.Add(checkpoint.GetComponent<Checkpoint>());
                         break;
                     case RaceObject.Respawn:
                         _loader.spawningPosition.Add(hitPos);
