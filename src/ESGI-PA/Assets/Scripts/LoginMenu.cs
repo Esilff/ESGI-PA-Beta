@@ -13,6 +13,7 @@ public class LoginMenu : MonoBehaviour
     public InputField passwordInput;
     public Button submitButton;
     public Text messageText; // Texte pour afficher le message de connexion
+    public Text MoneyText;
     public RectTransform loginCanvas;
     public RectTransform registerCanvas;
     public RectTransform mainCanvas;
@@ -29,21 +30,29 @@ public class LoginMenu : MonoBehaviour
 
     public void GetUser()
     {
+        if (!loginCanvas.gameObject.activeSelf)
+        {
+            loginCanvas.gameObject.SetActive(true);
+        }
+        
         StartCoroutine(GetUserCoroutine());
     }
+
     public void ToRegister()
     {
         loginCanvas.gameObject.SetActive(false);
         registerCanvas.gameObject.SetActive(true);
     }
+
     public void ToMain()
     {
         if (isLogin)
         {
             loginCanvas.gameObject.SetActive(false);
-            mainCanvas.gameObject.SetActive(true); 
+            mainCanvas.gameObject.SetActive(true);
         }
     }
+
     IEnumerator GetUserCoroutine()
     {
         // Construire l'URL de requête en ajoutant les paramètres de l'utilisateur
@@ -66,6 +75,7 @@ public class LoginMenu : MonoBehaviour
                     if (user.username == usernameInput.text && user.password == passwordInput.text)
                     {
                         Debug.Log("Connexion réussie");
+                        MoneyText.text = user.username + "    Money : " + user.money;
                         isLogin = true;
                         break; // Sortir de la boucle si la connexion est réussie
                     }
@@ -74,7 +84,6 @@ public class LoginMenu : MonoBehaviour
                 if (isLogin)
                 {
                     messageText.text = "Connexion réussie";
-                    isLogin = true;
                     ToMain();
                 }
                 else
@@ -103,4 +112,5 @@ public class User
     public string username;
     public string email;
     public string password;
+    public int money;
 }
