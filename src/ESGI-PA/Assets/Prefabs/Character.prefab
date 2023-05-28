@@ -216,6 +216,7 @@ MonoBehaviour:
   cameraScript: {fileID: 6770677644025071131}
   animator: {fileID: 160833275851890939}
   model: {fileID: 4109314778395615566}
+  collider: {fileID: 5569626115606156566}
   vehicle: {fileID: 0}
   turnSmoothTime: 0.1
   speed: 15

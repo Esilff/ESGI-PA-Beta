@@ -33,6 +33,7 @@ public class RaceMapper : EditorWindow
 
     private void OnEnable()
     {
+        if (Application.isPlaying) return;
         _loader = FindObjectOfType(typeof(RaceLoader)).GetComponent<RaceLoader>();
         _gameLoop = FindObjectOfType(typeof(GameLoop)).GetComponent<GameLoop>();
         _checkpointObject = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/checkpoint.prefab");

@@ -121,7 +121,7 @@
                 {
                     "name": "up",
                     "id": "5ceedaad-7b8f-4e06-b491-7976d3a6eacc",
-                    "path": "<Gamepad>/buttonSouth",
+                    "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "gamepad",
@@ -132,7 +132,7 @@
                 {
                     "name": "down",
                     "id": "e607e682-3239-4f6e-943c-e30e4ad0eed6",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Gamepad>/leftStick/down",
                     "interactions": "",
                     "processors": "",
                     "groups": "gamepad",
@@ -187,7 +187,7 @@
                 {
                     "name": "",
                     "id": "acd18829-8445-484e-b2f9-0a80927da35e",
-                    "path": "/Keyboard/q",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -399,7 +399,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "left",
+                    "name": "right",
                     "id": "1ad9f0e0-08e3-4823-a1b9-1e1028df1ec3",
                     "path": "<Gamepad>/leftStick/left",
                     "interactions": "",
@@ -410,7 +410,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "right",
+                    "name": "left",
                     "id": "4d91255a-ca9c-4836-92f4-65b675ec3c23",
                     "path": "<Gamepad>/leftStick/right",
                     "interactions": "",
@@ -434,7 +434,7 @@
                 {
                     "name": "",
                     "id": "6d773411-cd7f-4717-9c54-1cb5e5cd72bb",
-                    "path": "<Gamepad>/buttonSouth",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "gamepad",
@@ -456,7 +456,7 @@
                 {
                     "name": "",
                     "id": "8b541ab1-ff7f-4098-aed6-cdb2c19b1bbc",
-                    "path": "<Gamepad>/dpad/up",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "gamepad",
@@ -478,7 +478,7 @@
                 {
                     "name": "",
                     "id": "f5308a7c-f480-4ba5-a704-0340337e5b5c",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "gamepad",
@@ -489,7 +489,7 @@
                 {
                     "name": "",
                     "id": "161d67c0-99be-453c-84eb-831c07e55b0a",
-                    "path": "<Keyboard>/leftShift",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
@@ -504,6 +504,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
+                    "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b0dca3ac-0689-4d16-8696-d484bd4de447",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "gamepad",
                     "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false

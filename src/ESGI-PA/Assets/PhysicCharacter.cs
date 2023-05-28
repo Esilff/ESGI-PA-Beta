@@ -12,6 +12,7 @@ public class PhysicCharacter : MonoBehaviour
     [SerializeField] private CameraBehavior cameraScript;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject model;
+    [SerializeField] private Collider collider;
     
     private Vector2 _axis;
     private Vector2 _lookAxis;
@@ -29,7 +30,7 @@ public class PhysicCharacter : MonoBehaviour
     
 
     public GameObject vehicle;
-    private GameObject activeVehicle;
+    public GameObject activeVehicle;
     private bool onVehicle = false;
 
     public Vector2 LookAxis => _lookAxis;
@@ -99,7 +100,10 @@ public class PhysicCharacter : MonoBehaviour
 
     private void DefaultState()
     {
-        if (useBonus) InvokeVehicle();
+        if (useBonus && vehicle)
+        {
+            InvokeVehicle();
+        }
         CheckWalls();
         Gravity();
         Move();
@@ -152,7 +156,7 @@ public class PhysicCharacter : MonoBehaviour
     private void Gravity()
     {
         if (canJump) return;
-        body.AddForce(Vector3.down * (body.mass * gravity * Time.deltaTime * 100));
+        body.AddForce(Vector3.down * (body.mass * gravity * Time.deltaTime * 10), ForceMode.Impulse);
     }
 
     private IEnumerator Dash()
@@ -196,24 +200,29 @@ public class PhysicCharacter : MonoBehaviour
     private void InvokeVehicle()
     {
         if (!vehicle) return;
-        activeVehicle = vehicle;
         GameObject newVehicle = Instantiate(vehicle, character.position, character.rotation);
-        newVehicle.GetComponent<PhysicsVehicle>().Character = this;
-        character.parent.parent = newVehicle.transform;
         vehicle = null;
+        PhysicsVehicle pv = newVehicle.GetComponent<PhysicsVehicle>();
+        activeVehicle = newVehicle;
+        onVehicle = true;
+        pv.Character = this;
+        pv.input = input;
+        pv.input.SwitchCurrentActionMap("Vehicle");
+        character.parent = newVehicle.transform;
+        collider.isTrigger = true;
         model.SetActive(false);
         cameraScript.Locked = true;
         cameraScript.Target = newVehicle.transform;
-        onVehicle = true;
+        
     }
 
     public void DestroyVehicle()
     {
         activeVehicle = null;
         character.position = character.parent.parent.transform.position;
-        GameObject toDestroy = character.parent.parent.gameObject;
-        character.parent.parent = null;
-
+        GameObject toDestroy = character.parent.gameObject;
+        character.parent = null;
+        collider.isTrigger = false;
         Destroy(toDestroy);
         model.SetActive(true);
         cameraScript.Locked = false;
