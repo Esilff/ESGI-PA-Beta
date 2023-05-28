@@ -239,6 +239,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6846387436659892121, guid: f4e108148364e6f4facf53e6d6425b45, type: 3}
+      propertyPath: playerPrefab
+      value: 
+      objectReference: {fileID: 6645698762212720202, guid: 1928bddf13aebba42a3820396c6f2ae7, type: 3}
+    - target: {fileID: 6846387436659892121, guid: f4e108148364e6f4facf53e6d6425b45, type: 3}
       propertyPath: spawningPosition.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -422,6 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5fac1a7e6463b4782c409888941440, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  vehicles: []
   collider: {fileID: 454804246}
   mesh: {fileID: 454804247}
 --- !u!1001 &486410044
@@ -1198,6 +1203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5fac1a7e6463b4782c409888941440, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  vehicles: []
   collider: {fileID: 1951144293}
   mesh: {fileID: 1951144294}
 --- !u!1001 &2136339773

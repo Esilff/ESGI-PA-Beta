@@ -8,12 +8,13 @@ public class PhysicCharacter : MonoBehaviour
     [SerializeField] private Rigidbody body;
 
     [SerializeField] private PlayerInput input;
-    [SerializeField] private Transform camera;
+    [SerializeField] public Transform camera;
     [SerializeField] private CameraBehavior cameraScript;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject model;
     
     private Vector2 _axis;
+    private Vector2 _lookAxis;
     private bool shouldJump;
     private bool canJump = true;
     private bool canWallJump = false;
@@ -30,6 +31,8 @@ public class PhysicCharacter : MonoBehaviour
     public GameObject vehicle;
     private GameObject activeVehicle;
     private bool onVehicle = false;
+
+    public Vector2 LookAxis => _lookAxis;
 
         [SerializeField] private float turnSmoothTime = 0.1f;
 
@@ -69,6 +72,7 @@ public class PhysicCharacter : MonoBehaviour
             return;
         }
         _axis = input.actions["Move"].ReadValue<Vector2>() * (Time.deltaTime * 5000f);
+        _lookAxis = input.actions["Look"].ReadValue<Vector2>();
         shouldJump = input.actions["Jump"].IsPressed();
         dashing = input.actions["Dash"].IsPressed();
         isRunning = input.actions["Run"].IsPressed();
