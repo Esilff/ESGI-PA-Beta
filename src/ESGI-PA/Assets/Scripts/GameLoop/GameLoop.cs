@@ -42,16 +42,23 @@ public class GameLoop : MonoBehaviour
         set => players = value;
     }
 
+    [SerializeField] private GameObject checkpointBatch;
+    private int startCountdown = 3;
+    
     void Start()
     {
-        foreach (var checkpoint in checkpoints)
+        int batchCount = checkpointBatch.transform.childCount;
+        for (int i = 0; i < batchCount; i++)
         {
-            checkpoint.Loop = gameObject.GetComponent<GameLoop>();
+            checkpoints.Add(checkpointBatch.transform.GetChild(i).GetComponent<Checkpoint>());
         }
+
+        StartCoroutine(Starter());
     }
 
     void Update()
     {
+        if (!hasStarted) return;
         if (players == null) return;
         players.Sort(((o, o1) => (PlacementScore(o) > PlacementScore(o1)) ? -1 : 
             (PlacementScore(o) < PlacementScore(o1)) ? 1 : 0));
@@ -95,5 +102,16 @@ public class GameLoop : MonoBehaviour
         if (!obj.CompareTag("Player")) return;
         PlayersRank.Add(obj);
         PlayerInfo.Add(obj, new PlayerState());
+    }
+
+    private IEnumerator Starter()
+    {
+        while (startCountdown > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            startCountdown--;
+        }
+
+        hasStarted = true;
     }
 }

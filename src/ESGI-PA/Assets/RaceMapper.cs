@@ -18,13 +18,15 @@ public class RaceMapper : EditorWindow
     private GameObject _checkpointObject;
     private RaceLoader _loader;
     private GameObject _boxObject;
-    private GameLoop _gameLoop;
+    private GameObject _checkpointBatch;
+    private GameObject _respawner;
 
     private string _objectLabel = "None";
     private string _heightOffset = "1";
     private string _scale = "1";
     private bool validOffset = true;
     private bool validScale = true;
+    
     [MenuItem("Window/RaceMapper")]
     public static void ShowWindow()
     {
@@ -34,8 +36,9 @@ public class RaceMapper : EditorWindow
     private void OnEnable()
     {
         if (Application.isPlaying) return;
-        _loader = FindObjectOfType(typeof(RaceLoader)).GetComponent<RaceLoader>();
-        _gameLoop = FindObjectOfType(typeof(GameLoop)).GetComponent<GameLoop>();
+        //_loader = FindObjectOfType(typeof(RaceLoader)).GetComponent<RaceLoader>();
+        _respawner = GameObject.FindWithTag("Respawner");
+        _checkpointBatch = GameObject.FindWithTag("Batch");
         _checkpointObject = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/checkpoint.prefab");
         _boxObject = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/bonus.prefab");
         SceneView.duringSceneGui += SetObject;
@@ -100,11 +103,13 @@ public class RaceMapper : EditorWindow
                 {
                     case RaceObject.Checkpoint:
                         GameObject checkpoint = Instantiate(_checkpointObject, hitPos, Quaternion.identity);
+                        checkpoint.name = $"Checkpoint {_checkpointBatch.transform.childCount}";
                         checkpoint.transform.localScale *= validScale ? scaleValue : 1;
-                        _gameLoop.Checkpoints.Add(checkpoint.GetComponent<Checkpoint>());
+                        checkpoint.transform.parent = _checkpointBatch.transform;
                         break;
                     case RaceObject.Respawn:
-                        _loader.spawningPosition.Add(hitPos);
+                        string vecToString = hit.point.ToString();
+                        EditorGUIUtility.systemCopyBuffer = vecToString;
                         break;
                     case RaceObject.Box:
                         GameObject box = Instantiate(_boxObject, hitPos, Quaternion.identity);

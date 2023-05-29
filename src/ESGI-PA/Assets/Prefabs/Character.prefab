@@ -143,6 +143,7 @@ GameObject:
   - component: {fileID: 8599364737550320188}
   - component: {fileID: 5861880962237713298}
   - component: {fileID: 5569626115606156566}
+  - component: {fileID: 6635084671945665374}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -218,12 +219,15 @@ MonoBehaviour:
   model: {fileID: 4109314778395615566}
   collider: {fileID: 5569626115606156566}
   vehicle: {fileID: 0}
+  activeVehicle: {fileID: 0}
   turnSmoothTime: 0.1
   speed: 15
-  jumpForce: 10
-  gravity: 30
+  jumpForce: 30
+  gravity: 20
   dashSpeed: 10
   runMultiplier: 2
+  agent: {fileID: 6635084671945665374}
+  firstDestination: {fileID: 0}
 --- !u!54 &5861880962237713298
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -254,6 +258,28 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!195 &6635084671945665374
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6645698762212720202}
+  m_Enabled: 0
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 12.13
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1001 &3874874505482837023
 PrefabInstance:
   m_ObjectHideFlags: 0
