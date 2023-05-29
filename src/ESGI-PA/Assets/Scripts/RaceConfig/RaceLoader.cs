@@ -37,8 +37,7 @@ public class RaceLoader : MonoBehaviour
             manager.JoinPlayer(i, i, config.devices[i] is Gamepad ? "gamepad" : "keyboard", config.devices[i]);
         }
 
-        for (var i = 0; i < 8 - config.devices.Count; i++)
-        {
+
             GameObject bot = Instantiate(manager.playerPrefab);
             bot.transform.position = spawningPosition[playerJoined];
             PhysicCharacter character =  bot.GetComponent<PhysicCharacter>();
@@ -49,7 +48,6 @@ public class RaceLoader : MonoBehaviour
             loop.AddPlayer(bot);
             playerJoined++;
         }
-    }
 
     public void SetPlayer(PlayerInput player)
     {

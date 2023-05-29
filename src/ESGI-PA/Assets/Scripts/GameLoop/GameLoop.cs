@@ -94,7 +94,7 @@ public class GameLoop : MonoBehaviour
         Transform nextCheckpointPos =
             Checkpoints[(nextCheckpoint > Checkpoints.Count) ? 0 : nextCheckpoint].gameObject.transform;
         int distance = (int)(Mathf.Abs(nextCheckpointPos.position.x - player.transform.position.x) + Mathf.Abs(nextCheckpointPos.position.y - player.transform.position.y));
-        return 100 + (playersInfo[player].turnCount * 1000) - distance;
+        return 100 + (playersInfo[player].turnCount * 1000) + playersInfo[player].currentCheckpoint * 100 - distance;
     }
     
     public void AddPlayer(GameObject obj)
