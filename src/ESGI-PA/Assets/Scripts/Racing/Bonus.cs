@@ -7,12 +7,13 @@ public class Bonus : MonoBehaviour
 {
     [SerializeField] private List<GameObject> vehicles = new();
 
-    private Action<PhysicCharacter>[] bonusList = new Action<PhysicCharacter>[]
+    private List<Action<PhysicsVehicle>> bonusList = new()
     {
         
     };
-    
-    
+
+  
+
     /*private static Bonus instance = null;
     
     private Bonus(){}

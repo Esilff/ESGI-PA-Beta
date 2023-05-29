@@ -2,12 +2,13 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 [Serializable]
-struct VehicleStats
+public struct VehicleStats
 {
     [Range(1,15)]
     public int speed;
@@ -18,6 +19,9 @@ struct VehicleStats
     public float loopCap;
 
     [Range(60, 100)] public int maxHealth;
+
+    [Range(-1,1)]
+    public int isImmune;
 }
 
 public class PhysicsVehicle : MonoBehaviour
@@ -26,7 +30,7 @@ public class PhysicsVehicle : MonoBehaviour
     [InspectorLabel("Components")]
     [SerializeField] private Transform vehicle;
     [SerializeField] private Rigidbody body;
-    [SerializeField] private PlayerInput input;
+    public PlayerInput input;
     
 
     [SerializeField] private VehicleStats stats;
@@ -37,6 +41,7 @@ public class PhysicsVehicle : MonoBehaviour
     private bool _isGrounded;
     private RaycastHit _groundInfo;
     private bool _isBoosting;
+    private bool _usingBonus;
     
     private int _currentHealth;
     private const int MAX_BOOST = 100;
@@ -45,8 +50,11 @@ public class PhysicsVehicle : MonoBehaviour
     private const float TIME_TO_BOOST = 3;
     private float boostTimer = 0;
 
+    public Action<PhysicsVehicle> bonus;
+
     private PhysicCharacter character;
 
+    public Checkpoint lastCheckpoint;
     public PhysicCharacter Character
     {
         get => character;
@@ -61,12 +69,22 @@ public class PhysicsVehicle : MonoBehaviour
     void Update()
     {
         CheckHealth();
-        ReadInput();
+     
+        if (input.actions["Respawn"].IsPressed() && !_isGrounded && body.velocity.magnitude < 1f) Respawn();
+        _defaultAxis = input.actions["Movement"].ReadValue<Vector2>();
+        _axis = input.actions["Movement"].ReadValue<Vector2>() * (Time.deltaTime * 50000f);
+        _isDrifting = input.actions["Drift"].IsPressed();
+        _isBoosting = input.actions["Booster"].IsPressed();
+        _usingBonus = input.actions["Bonus"].IsPressed();
     }
 
     private void FixedUpdate()
     {
-        
+        if (_usingBonus && bonus != null)
+        {
+            bonus(this);
+            bonus = null;
+        }
         CheckConstraints();
         Gravity();
         ManageBoost();
@@ -80,15 +98,6 @@ public class PhysicsVehicle : MonoBehaviour
         }
     }
 
-    private void ReadInput()
-    {
-        if (input.actions["Respawn"].IsPressed() && !_isGrounded && body.velocity.magnitude < 1f) Respawn();
-        _defaultAxis = input.actions["Movement"].ReadValue<Vector2>();
-        _axis = input.actions["Movement"].ReadValue<Vector2>() * (Time.deltaTime * 50000f);
-        _isDrifting = input.actions["Drift"].IsPressed();
-        _isBoosting = input.actions["Booster"].IsPressed();
-    }
-
     private void Move()
     {
         if (!_isGrounded) return;
@@ -99,7 +108,7 @@ public class PhysicsVehicle : MonoBehaviour
         }
         var rotation = vehicle.rotation;
         transform.rotation = Quaternion.Lerp(rotation,
-            Quaternion.FromToRotation(vehicle.up, _groundInfo.normal) * rotation, 0.5f);
+            Quaternion.FromToRotation(vehicle.up, _groundInfo.normal) * rotation, 0.2f);
         body.AddForce(force, ForceMode.Acceleration);
     }
 
@@ -107,11 +116,11 @@ public class PhysicsVehicle : MonoBehaviour
     {
         if (!_isGrounded) return;
         var rotation = vehicle.rotation;
-        rotation *= Quaternion.Euler(new Vector3(0,stats.rotationSpeed * 0.05f,0) * (_defaultAxis.x * 25));
+        rotation *= Quaternion.Euler(new Vector3(0,stats.rotationSpeed * 0.05f,0) * (_defaultAxis.x * 15));
         rotation = Quaternion.Lerp(rotation,
             Quaternion.FromToRotation(vehicle.up, _groundInfo.normal) * rotation, 0.5f);
         vehicle.rotation = rotation;
-        var force = (vehicle.forward * (stats.speed * 25 * (_isBoosting? 1.5f : 1f))) + (vehicle.right * ((Math.Abs(_defaultAxis.x - (-1)) < 0.4f ? _defaultAxis.y : -_defaultAxis.y) * stats.speed * 30));
+        var force = (vehicle.forward * (stats.speed * 25 * (_isBoosting? 1.5f : 1f))) + (vehicle.right * ((Math.Abs(_defaultAxis.x - (-1)) < 0.4f ? _defaultAxis.y : -_defaultAxis.y) * stats.speed * 40));
         body.AddForce(force);
     }
 
@@ -138,7 +147,7 @@ public class PhysicsVehicle : MonoBehaviour
 
     private void Respawn()
     {
-        vehicle.position = new Vector3(37, -5, 0);
+        vehicle.position = lastCheckpoint.transform.position;
         vehicle.rotation = Quaternion.identity;
     }
 
@@ -171,6 +180,34 @@ public class PhysicsVehicle : MonoBehaviour
         if (boostTimer > TIME_TO_BOOST && boostAmount <= MAX_BOOST)
         {
             boostAmount += 0.1f;
+        }
+    }
+
+    public void AddHealth(int amount)
+    {
+        _currentHealth += amount;
+        if (_currentHealth > stats.maxHealth) _currentHealth = stats.maxHealth;
+        if (_currentHealth < 0) _currentHealth = 0;
+    }
+
+    public void SetResistance(int amount)
+    {
+        if (amount < -1) amount = -1;
+        if (amount > 1) amount = 1;
+        stats.isImmune = amount;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Projectile"))
+        {
+            _currentHealth -= 50;
+        }
+        if (collision.gameObject.TryGetComponent<PhysicsVehicle>(out PhysicsVehicle vehicle))
+        {
+            _currentHealth -= 10;
+            vehicle.AddHealth(-10);
+            Debug.Log("Losing health");
         }
     }
 }

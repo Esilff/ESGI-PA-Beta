@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: bed13fc6609f92946a5f682ddc06389c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - checkpointObject: {fileID: 8597338706122041310, guid: 7e093a29d76d04c4382d077fade99dac, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
