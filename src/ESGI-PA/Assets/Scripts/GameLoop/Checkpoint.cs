@@ -12,12 +12,23 @@ public class Checkpoint : MonoBehaviour
         get => loop;
         set => loop = value;
     }
+
+    private void Start()
+    {
+        this.loop = FindObjectOfType<GameLoop>().GetComponent<GameLoop>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         other.TryGetComponent<PhysicsVehicle>(out PhysicsVehicle pv);
         if (pv) pv.lastCheckpoint = this;
         if (!other.CompareTag("Player")) return;
-        
+        other.gameObject.GetComponent<PhysicCharacter>().agent.SetDestination(
+            loop.Checkpoints[
+                loop.Checkpoints.IndexOf(this) == loop.Checkpoints.Count - 1 ?
+                    0 : loop.Checkpoints.IndexOf(this) + 1
+            ].transform.position
+            );
         int checkpointIndex = Loop.Checkpoints.IndexOf(gameObject.GetComponent<Checkpoint>());
         var info = Loop.PlayerInfo[other.gameObject];
         info.lastCheckpoint = info.currentCheckpoint;
@@ -26,7 +37,6 @@ public class Checkpoint : MonoBehaviour
         {
             info.turnCount++;
         }
-        Debug.Log("Info : " + checkpointIndex + ":" + info.lastCheckpoint + ":" + info.turnCount);
         Loop.PlayerInfo[other.gameObject] = info;
     }
 }

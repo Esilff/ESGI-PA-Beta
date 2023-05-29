@@ -34,20 +34,24 @@ public class RaceLoader : MonoBehaviour
         if (config.devices.Count <= 1) manager.splitScreen = false;
         for (var i = 0; i < config.devices.Count; i++)
         {
-
             manager.JoinPlayer(i, i, config.devices[i] is Gamepad ? "gamepad" : "keyboard", config.devices[i]);
-
-
         }
-    }
+
+
+            GameObject bot = Instantiate(manager.playerPrefab);
+            bot.transform.position = spawningPosition[playerJoined];
+            PhysicCharacter character =  bot.GetComponent<PhysicCharacter>();
+            character.isIAControlled = true;
+            character.firstDestination = loop.Checkpoints[0].transform;
+            character.agent.enabled = true;
+            bot.GetComponent<PlayerInput>().enabled = false;
+            loop.AddPlayer(bot);
+            playerJoined++;
+        }
 
     public void SetPlayer(PlayerInput player)
     {
-        
-        // uiManager.Players.Append(player.gameObject);
-        // loop.PlayersRank.Append(player.gameObject);
         loop.AddPlayer(player.gameObject);
-        //uiManager.LinkToUI(player.gameObject);
         SetCameraLayout(player.GetComponent<PhysicCharacter>().camera.GetComponent<Camera>());
         
 

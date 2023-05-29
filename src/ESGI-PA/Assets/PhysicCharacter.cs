@@ -1,5 +1,7 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 public class PhysicCharacter : MonoBehaviour
@@ -55,18 +57,25 @@ public class PhysicCharacter : MonoBehaviour
     private bool rightWallHit;
 
     private bool stillOnWall = false;
+
+    [SerializeField] public bool isIAControlled = false;
+    [SerializeField] public NavMeshAgent agent;
+    public Transform firstDestination;
     
     // Start is called before the first frame update
     void Start()
     {
         input.defaultActionMap = "Character";
         _runAnim = Animator.StringToHash("Running Threshold");
+        camera.parent = null;
+        if (isIAControlled)
+            agent.SetDestination(firstDestination.position);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (isIAControlled) camera.gameObject.SetActive(false);
         if (onVehicle)
         {
             _shouldExit = input.actions["Escape"].IsPressed();
