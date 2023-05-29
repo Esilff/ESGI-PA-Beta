@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -12,6 +13,9 @@ public class RaceLoader : MonoBehaviour
     [SerializeField] private PlayerInputManager manager;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private UIManager uiManager;
+    [SerializeField] private GameLoop loop;
+
+    private PlayerInput lastInput;
     
     private int playerJoined;
 
@@ -30,33 +34,38 @@ public class RaceLoader : MonoBehaviour
         if (config.devices.Count <= 1) manager.splitScreen = false;
         for (var i = 0; i < config.devices.Count; i++)
         {
-            
-            if (config.devices[i] is Gamepad)
-            {
-                manager.JoinPlayer(i, i, "gamepad", config.devices[i]);
-                continue;
-            }
-            if (config.devices[i] is Keyboard)
-            {
-                manager.JoinPlayer(i, i, "keyboard", config.devices[i]);
-            }
+
+            manager.JoinPlayer(i, i, config.devices[i] is Gamepad ? "gamepad" : "keyboard", config.devices[i]);
+
 
         }
     }
 
-    public void setViewport(PlayerInput player)
+    public void SetPlayer(PlayerInput player)
     {
-        uiManager.Players.Append(player.gameObject);
-        if (config.devices.Count == 1)
-        {
-            player.gameObject.GetComponentInChildren<Camera>().rect = new Rect(0,0,1,1);
-        }
-        if (config.devices.Count == 2)
-        {
-            player.gameObject.GetComponentInChildren<Camera>().rect = viewportDuo[playerJoined];
-        }
+        
+        // uiManager.Players.Append(player.gameObject);
+        // loop.PlayersRank.Append(player.gameObject);
+        loop.AddPlayer(player.gameObject);
+        //uiManager.LinkToUI(player.gameObject);
+        SetCameraLayout(player.GetComponent<PhysicCharacter>().camera.GetComponent<Camera>());
+        
 
         player.gameObject.transform.position = spawningPosition[playerJoined];
         playerJoined++;
+    }
+
+    private void SetCameraLayout(Camera camera)
+    {
+        if (config.devices.Count == 1)
+        {
+            camera.rect = new Rect(0,0,1,1);
+        }
+        if (config.devices.Count == 2)
+        {
+            camera.rect = viewportDuo[playerJoined];
+        }
+
+        camera.transform.parent = null;
     }
 }

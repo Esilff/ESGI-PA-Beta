@@ -14,7 +14,10 @@ public class Checkpoint : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        other.TryGetComponent<PhysicsVehicle>(out PhysicsVehicle pv);
+        if (pv) pv.lastCheckpoint = this;
         if (!other.CompareTag("Player")) return;
+        
         int checkpointIndex = Loop.Checkpoints.IndexOf(gameObject.GetComponent<Checkpoint>());
         var info = Loop.PlayerInfo[other.gameObject];
         info.lastCheckpoint = info.currentCheckpoint;
