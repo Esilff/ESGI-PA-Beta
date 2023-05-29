@@ -15,6 +15,7 @@ public struct PlayerState
 
 public class GameLoop : MonoBehaviour
 {
+    [SerializeField] private RaceLoader loader;
     [SerializeField] private List<Checkpoint> checkpoints;
     private GameObject testIndex;
     public List<Checkpoint> Checkpoints
@@ -62,7 +63,10 @@ public class GameLoop : MonoBehaviour
         }
     }
 
-    
+    private void AfterEndgame()
+    {
+        
+    }
 
     private bool CheckEndgame()
     {

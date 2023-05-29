@@ -6,7 +6,10 @@ using UnityEngine.UIElements;
 
 public class MenuController : MonoBehaviour
 {
+	public RaceConfig config;
+	
 	public RectTransform mainMenu;
+	public RectTransform gamemodeMenu;
 	public RectTransform mapSelectMenu;
 	public RectTransform gameConfigMenu;
 	public RectTransform optionsMenu;
@@ -31,7 +34,23 @@ public class MenuController : MonoBehaviour
 		canEditPlayers = false;
 		mapSelectMenu.gameObject.SetActive(false);
 		gameConfigMenu.gameObject.SetActive(false);
+		gamemodeMenu.gameObject.SetActive(false);
 		mainMenu.gameObject.SetActive(true);
+	}
+
+	public void ChooseGameMode(string mode)
+	{
+		switch (mode)
+		{
+			case "cup":
+				config.mode = GameMode.Cup;
+				break;
+			case "free":
+				config.mode = GameMode.Free;
+				break;
+		}
+		gamemodeMenu.gameObject.SetActive(false);
+		mapSelectMenu.gameObject.SetActive(true);
 	}
 
 	public void ToOptions()
@@ -45,6 +64,13 @@ public class MenuController : MonoBehaviour
 		optionsMenu.gameObject.SetActive(false);
 		mainMenu.gameObject.SetActive(true);
 	}
+
+	public void ShowGameModeMenu()
+	{
+		mainMenu.gameObject.SetActive(false);
+		gamemodeMenu.gameObject.SetActive(true);
+	}
+	
 
 	public void ShowMaps()
 	{

@@ -17,9 +17,15 @@ public class RaceLoader : MonoBehaviour
 
     private PlayerInput lastInput;
     
-    private int playerJoined;
+    private int _playerJoined = 0;
 
     public List<Vector3> spawningPosition = new();
+
+    public RaceConfig Config
+    {
+        get => config;
+        set => config = value;
+    }
 
     private Rect[] viewportDuo =
     {
@@ -29,15 +35,26 @@ public class RaceLoader : MonoBehaviour
     
     void Start()
     {
-        playerJoined = 0;
+        if (config.players == null) LoadFirstGame();
+        else LoadGameFromConfigFile();
+    }
+
+    private void LoadGameFromConfigFile()
+    {
+        foreach (var player in config.players)
+        {
+            SetPlayer(player.GetComponent<PlayerInput>());
+        }
+    }
+
+    private void LoadFirstGame()
+    {
+        _playerJoined = 0;
         manager.playerPrefab = playerPrefab;
         if (config.devices.Count <= 1) manager.splitScreen = false;
         for (var i = 0; i < config.devices.Count; i++)
         {
-
             manager.JoinPlayer(i, i, config.devices[i] is Gamepad ? "gamepad" : "keyboard", config.devices[i]);
-
-
         }
     }
 
@@ -51,8 +68,8 @@ public class RaceLoader : MonoBehaviour
         SetCameraLayout(player.GetComponent<PhysicCharacter>().camera.GetComponent<Camera>());
         
 
-        player.gameObject.transform.position = spawningPosition[playerJoined];
-        playerJoined++;
+        player.gameObject.transform.position = spawningPosition[_playerJoined];
+        _playerJoined++;
     }
 
     private void SetCameraLayout(Camera camera)
@@ -63,7 +80,7 @@ public class RaceLoader : MonoBehaviour
         }
         if (config.devices.Count == 2)
         {
-            camera.rect = viewportDuo[playerJoined];
+            camera.rect = viewportDuo[_playerJoined];
         }
 
         camera.transform.parent = null;
