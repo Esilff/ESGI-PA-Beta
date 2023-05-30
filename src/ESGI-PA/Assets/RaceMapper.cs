@@ -35,9 +35,8 @@ public class RaceMapper : EditorWindow
 
     private void OnEnable()
     {
-        if (Application.isPlaying) return;
         //_loader = FindObjectOfType(typeof(RaceLoader)).GetComponent<RaceLoader>();
-        _respawner = GameObject.FindWithTag("Respawner");
+        //_respawner = GameObject.FindWithTag("Respawner");
         _checkpointBatch = GameObject.FindWithTag("Batch");
         _checkpointObject = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/checkpoint.prefab");
         _boxObject = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/bonus.prefab");
