@@ -1,8 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Unity.MLAgents;
-using Unity.MLAgents.Actuators;
+
 
 public class PhysicCharacter : MonoBehaviour
 {
@@ -54,20 +54,26 @@ public class PhysicCharacter : MonoBehaviour
 
     private bool stillOnWall = false;
 
-    private bool isIAControlled = false;
+    public bool isIAControlled = false;
+    public CharacterAI AIModule;
+    
     
     // Start is called before the first frame update
     void Start()
     {
         input.defaultActionMap = "Character";
         _runAnim = Animator.StringToHash("Running Threshold");
+        camera.transform.parent = null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        ReadInput();
-        
+        if (!isIAControlled) ReadInput();
+        else
+        {
+            _axis = AIModule.axis * (Time.deltaTime * 10f);
+        }
     }
 
     private void FixedUpdate()
@@ -225,5 +231,15 @@ public class PhysicCharacter : MonoBehaviour
         cameraScript.Target = character;
         cameraScript.gameObject.transform.rotation = Quaternion.identity;
         onVehicle = false;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            Debug.Log("Collide on wall, removing reward");
+            AIModule.AddReward(-0.05f);
+            AIModule.EndEpisode();
+        }
     }
 }

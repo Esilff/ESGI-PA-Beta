@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bonus
   - Projectile
+  - Wall
   layers:
   - Default
   - TransparentFX

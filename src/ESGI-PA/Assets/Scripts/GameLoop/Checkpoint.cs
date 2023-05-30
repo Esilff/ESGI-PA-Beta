@@ -15,7 +15,12 @@ public class Checkpoint : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-        int checkpointIndex = Loop.Checkpoints.IndexOf(gameObject.GetComponent<Checkpoint>());
+        other.TryGetComponent<PhysicCharacter>(out PhysicCharacter character);
+        if (character.isIAControlled)
+        {
+            character.AIModule.SetReward(1f);
+        }
+        /*int checkpointIndex = Loop.Checkpoints.IndexOf(gameObject.GetComponent<Checkpoint>());
         var info = Loop.PlayerInfo[other.gameObject];
         info.lastCheckpoint = info.currentCheckpoint;
         info.currentCheckpoint = checkpointIndex;
@@ -24,6 +29,6 @@ public class Checkpoint : MonoBehaviour
             info.turnCount++;
         }
         Debug.Log("Info : " + checkpointIndex + ":" + info.lastCheckpoint + ":" + info.turnCount);
-        Loop.PlayerInfo[other.gameObject] = info;
+        Loop.PlayerInfo[other.gameObject] = info;*/
     }
 }

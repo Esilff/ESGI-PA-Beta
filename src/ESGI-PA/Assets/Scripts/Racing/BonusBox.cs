@@ -54,10 +54,10 @@ public class BonusBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
-        isTaken = true;
-        GameObject vehicle = other.GetComponent<PhysicCharacter>().vehicle = new GameObject();
-        other.GetComponent<PhysicCharacter>().vehicle =
-            vehicles[Random.Range(0, vehicles.Count)]; //replace with random vehicle
+        // if (!other.CompareTag("Player")) return;
+        // isTaken = true;
+        // GameObject vehicle = other.GetComponent<PhysicCharacter>().vehicle = new GameObject();
+        // other.GetComponent<PhysicCharacter>().vehicle =
+        //     vehicles[Random.Range(0, vehicles.Count)]; //replace with random vehicle
     }
 }
