@@ -8,14 +8,45 @@ using UnityEngine;
 public class CharacterAI : Agent
 {
     public Transform character;
-    
-    public override void OnActionReceived(ActionBuffers actions)
-    {
-        Debug.Log(actions.DiscreteActions[0]);
-    }
+    public Checkpoint[] checkpoints;
+
+    public Vector2 axis;
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(character.position);
+        var position = character.position;
+        sensor.AddObservation(position);
+        sensor.AddObservation(checkpoints[0].transform.position);
+        
     }
+    
+    public override void OnEpisodeBegin()
+    {
+        character.localPosition = new Vector3(-7.6260376f, 1.20520067f, -3.99339294f);
+    }
+
+    public override void OnActionReceived(ActionBuffers actions)
+    {
+        float x, y;
+        x = actions.DiscreteActions[0] switch
+        {
+            0 => 0,
+            1 => -1,
+            2 => 1,
+            _ => 0
+        };
+        y = actions.DiscreteActions[1] switch
+        {
+            0 => 0,
+            1 => -1,
+            2 => 1,
+            _ => 0
+        };
+        /*x = actions.ContinuousActions[0];
+        y = actions.ContinuousActions[1];*/
+        axis = new Vector2(x, y);
+        AddReward(-0.05f);
+    }
+
+   
 }

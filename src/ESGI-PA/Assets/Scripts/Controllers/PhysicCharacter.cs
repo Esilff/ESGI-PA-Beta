@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 
 public class PhysicCharacter : MonoBehaviour
 {
@@ -8,14 +10,12 @@ public class PhysicCharacter : MonoBehaviour
     [SerializeField] private Rigidbody body;
 
     [SerializeField] private PlayerInput input;
-    [SerializeField] public Transform camera;
+    [SerializeField] private Transform camera;
     [SerializeField] private CameraBehavior cameraScript;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject model;
-    [SerializeField] private Collider collider;
     
     private Vector2 _axis;
-    private Vector2 _lookAxis;
     private bool shouldJump;
     private bool canJump = true;
     private bool canWallJump = false;
@@ -30,10 +30,8 @@ public class PhysicCharacter : MonoBehaviour
     
 
     public GameObject vehicle;
-    public GameObject activeVehicle;
+    private GameObject activeVehicle;
     private bool onVehicle = false;
-
-    public Vector2 LookAxis => _lookAxis;
 
         [SerializeField] private float turnSmoothTime = 0.1f;
 
@@ -55,29 +53,27 @@ public class PhysicCharacter : MonoBehaviour
     private bool rightWallHit;
 
     private bool stillOnWall = false;
+
+    public bool isIAControlled = false;
+    public CharacterAI AIModule;
+    
     
     // Start is called before the first frame update
     void Start()
     {
         input.defaultActionMap = "Character";
         _runAnim = Animator.StringToHash("Running Threshold");
+        camera.transform.parent = null;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (onVehicle)
+        if (!isIAControlled) ReadInput();
+        else
         {
-            _shouldExit = input.actions["Escape"].IsPressed();
-            return;
+            _axis = AIModule.axis * (Time.deltaTime * 10f);
         }
-        _axis = input.actions["Move"].ReadValue<Vector2>() * (Time.deltaTime * 5000f);
-        _lookAxis = input.actions["Look"].ReadValue<Vector2>();
-        shouldJump = input.actions["Jump"].IsPressed();
-        dashing = input.actions["Dash"].IsPressed();
-        isRunning = input.actions["Run"].IsPressed();
-        useBonus = input.actions["Bonus"].IsPressed();
     }
 
     private void FixedUpdate()
@@ -98,12 +94,23 @@ public class PhysicCharacter : MonoBehaviour
         }
     }
 
+    private void ReadInput()
+    {
+        if (onVehicle)
+        {
+            _shouldExit = input.actions["Escape"].IsPressed();
+            return;
+        }
+        _axis = input.actions["Move"].ReadValue<Vector2>() * (Time.deltaTime * 5000f);
+        shouldJump = input.actions["Jump"].IsPressed();
+        dashing = input.actions["Dash"].IsPressed();
+        isRunning = input.actions["Run"].IsPressed();
+        useBonus = input.actions["Bonus"].IsPressed();
+    }
+    
     private void DefaultState()
     {
-        if (useBonus && vehicle)
-        {
-            InvokeVehicle();
-        }
+        if (useBonus) InvokeVehicle();
         CheckWalls();
         Gravity();
         Move();
@@ -114,8 +121,8 @@ public class PhysicCharacter : MonoBehaviour
 
     private void Move()
     {
-        var forward = camera.forward;
-        var right = camera.right;
+        var forward = isIAControlled ? Vector3.forward : camera.forward;
+        var right = isIAControlled ? Vector3.right : camera.right;
         forward.y = 0;
         right.y = 0;
         forward.Normalize();
@@ -156,7 +163,7 @@ public class PhysicCharacter : MonoBehaviour
     private void Gravity()
     {
         if (canJump) return;
-        body.AddForce(Vector3.down * (body.mass * gravity * Time.deltaTime * 10), ForceMode.Impulse);
+        body.AddForce(Vector3.down * (body.mass * gravity * Time.deltaTime * 100));
     }
 
     private IEnumerator Dash()
@@ -200,34 +207,39 @@ public class PhysicCharacter : MonoBehaviour
     private void InvokeVehicle()
     {
         if (!vehicle) return;
+        activeVehicle = vehicle;
         GameObject newVehicle = Instantiate(vehicle, character.position, character.rotation);
+        newVehicle.GetComponent<PhysicsVehicle>().Character = this;
+        character.parent.parent = newVehicle.transform;
         vehicle = null;
-        PhysicsVehicle pv = newVehicle.GetComponent<PhysicsVehicle>();
-        activeVehicle = newVehicle;
-        onVehicle = true;
-        pv.Character = this;
-        pv.input = input;
-        pv.input.SwitchCurrentActionMap("Vehicle");
-        character.parent = newVehicle.transform;
-        collider.isTrigger = true;
         model.SetActive(false);
         cameraScript.Locked = true;
         cameraScript.Target = newVehicle.transform;
-        
+        onVehicle = true;
     }
 
     public void DestroyVehicle()
     {
         activeVehicle = null;
         character.position = character.parent.parent.transform.position;
-        GameObject toDestroy = character.parent.gameObject;
-        character.parent = null;
-        collider.isTrigger = false;
+        GameObject toDestroy = character.parent.parent.gameObject;
+        character.parent.parent = null;
+
         Destroy(toDestroy);
         model.SetActive(true);
         cameraScript.Locked = false;
         cameraScript.Target = character;
         cameraScript.gameObject.transform.rotation = Quaternion.identity;
         onVehicle = false;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            Debug.Log("Collide on wall, removing reward");
+            AIModule.AddReward(-0.05f);
+            AIModule.EndEpisode();
+        }
     }
 }

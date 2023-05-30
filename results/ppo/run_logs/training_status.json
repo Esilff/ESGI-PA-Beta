@@ -2,44 +2,22 @@
     "CharacterAI": {
         "checkpoints": [
             {
-                "steps": 26304,
-                "file_path": "results\\ppo\\CharacterAI\\CharacterAI-26304.onnx",
-                "reward": null,
-                "creation_time": 1685048642.1116338,
+                "steps": 3322,
+                "file_path": "results\\ppo\\CharacterAI\\CharacterAI-3322.onnx",
+                "reward": -5.435123851601507,
+                "creation_time": 1685444877.2825546,
                 "auxillary_file_paths": [
-                    "results\\ppo\\CharacterAI\\CharacterAI-26304.pt"
+                    "results\\ppo\\CharacterAI\\CharacterAI-3322.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 26304,
+            "steps": 3322,
             "file_path": "results\\ppo\\CharacterAI.onnx",
-            "reward": null,
-            "creation_time": 1685048642.1116338,
+            "reward": -5.435123851601507,
+            "creation_time": 1685444877.2825546,
             "auxillary_file_paths": [
-                "results\\ppo\\CharacterAI\\CharacterAI-26304.pt"
-            ]
-        }
-    },
-    "CharacterRacer_Easy": {
-        "checkpoints": [
-            {
-                "steps": 26304,
-                "file_path": "results\\ppo\\CharacterRacer_Easy\\CharacterRacer_Easy-26304.onnx",
-                "reward": null,
-                "creation_time": 1685048642.167145,
-                "auxillary_file_paths": [
-                    "results\\ppo\\CharacterRacer_Easy\\CharacterRacer_Easy-26304.pt"
-                ]
-            }
-        ],
-        "final_checkpoint": {
-            "steps": 26304,
-            "file_path": "results\\ppo\\CharacterRacer_Easy.onnx",
-            "reward": null,
-            "creation_time": 1685048642.167145,
-            "auxillary_file_paths": [
-                "results\\ppo\\CharacterRacer_Easy\\CharacterRacer_Easy-26304.pt"
+                "results\\ppo\\CharacterAI\\CharacterAI-3322.pt"
             ]
         }
     },
