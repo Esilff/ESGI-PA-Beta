@@ -9,6 +9,7 @@ public class CharacterAI : Agent
 {
     public Transform character;
     public Checkpoint[] checkpoints;
+    public int currentCheckpoint = 0;
 
     public Vector2 axis;
 
@@ -16,13 +17,14 @@ public class CharacterAI : Agent
     {
         var position = character.position;
         sensor.AddObservation(position);
-        sensor.AddObservation(checkpoints[0].transform.position);
+        sensor.AddObservation(checkpoints[currentCheckpoint].transform.position);
         
     }
     
     public override void OnEpisodeBegin()
     {
         character.localPosition = new Vector3(-7.6260376f, 1.20520067f, -3.99339294f);
+        currentCheckpoint = 0;
     }
 
     public override void OnActionReceived(ActionBuffers actions)

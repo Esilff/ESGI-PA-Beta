@@ -10,7 +10,7 @@ public class PhysicCharacter : MonoBehaviour
     [SerializeField] private Rigidbody body;
 
     [SerializeField] private PlayerInput input;
-    [SerializeField] private Transform camera;
+    [SerializeField] public Transform camera;
     [SerializeField] private CameraBehavior cameraScript;
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject model;
@@ -56,7 +56,9 @@ public class PhysicCharacter : MonoBehaviour
 
     public bool isIAControlled = false;
     public CharacterAI AIModule;
-    
+
+    private Vector2 _lookAxis;
+    public Vector2 LookAxis => _lookAxis;
     
     // Start is called before the first frame update
     void Start()
@@ -102,6 +104,7 @@ public class PhysicCharacter : MonoBehaviour
             return;
         }
         _axis = input.actions["Move"].ReadValue<Vector2>() * (Time.deltaTime * 5000f);
+        _lookAxis = input.actions["Look"].ReadValue<Vector2>();
         shouldJump = input.actions["Jump"].IsPressed();
         dashing = input.actions["Dash"].IsPressed();
         isRunning = input.actions["Run"].IsPressed();

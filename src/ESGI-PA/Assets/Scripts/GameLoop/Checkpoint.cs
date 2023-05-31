@@ -16,9 +16,17 @@ public class Checkpoint : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
         other.TryGetComponent<PhysicCharacter>(out PhysicCharacter character);
-        if (character.isIAControlled)
+        if (character.isIAControlled && character.AIModule.checkpoints[character.AIModule.currentCheckpoint] == this)
         {
             character.AIModule.SetReward(1f);
+            if (character.AIModule.currentCheckpoint >= character.AIModule.checkpoints.Length - 1)
+            {
+                character.AIModule.currentCheckpoint = 0;
+            }
+            else
+            {
+                character.AIModule.currentCheckpoint++;
+            }
         }
         /*int checkpointIndex = Loop.Checkpoints.IndexOf(gameObject.GetComponent<Checkpoint>());
         var info = Loop.PlayerInfo[other.gameObject];
